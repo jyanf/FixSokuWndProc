@@ -47,6 +47,12 @@ build
 unsuccessfulbuild
 *.pdb
 link.command.
-*.dll.recipe
 *.vcxproj.FileListAbsolute.txt
 /FixSokuWndProc/Debug
+/CMakeCache.txt
+*.cmake
+/CMakeFiles
+*.recipe
+*.exp
+*.lib
+*.ilk
