@@ -49,3 +49,4 @@ unsuccessfulbuild
 link.command.
 *.dll.recipe
 *.vcxproj.FileListAbsolute.txt
+/FixSokuWndProc/Debug
