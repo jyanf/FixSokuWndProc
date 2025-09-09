@@ -22,7 +22,7 @@ bool fullscreen;
 bool sticky = false;
 char stickyKey = 'P';
 static bool tryToHideCursor = false;
-static char IMECode[16];
+static char IMECode[16]{0};
 
 HWND windowBars;
 HWND window;
@@ -359,7 +359,8 @@ HWND __stdcall myCreateWindowExA(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpW
 		createBars();
 	}
 
-	setEngIME(window, IMECode);
+	if (strlen(IMECode))
+		setEngIME(window, IMECode);
 
 	return window;
 }
@@ -387,7 +388,9 @@ void loadConfig() {
 	stickyKey = GetPrivateProfileIntA("Sticky", "Keybind", 'P', profilePath);
 
 	tryToHideCursor = GetPrivateProfileIntA("Other", "TryToHideCursor", 0, profilePath) != 0;
-	GetPrivateProfileStringA("Other", "ImeLanguageID", "00000409", IMECode, 16, profilePath);
+
+	if (GetPrivateProfileIntA("AutoSetIME", "Enabled", 1, profilePath))
+		GetPrivateProfileStringA("AutoSetIME", "LanguageID", "00000409", IMECode, 16, profilePath);
 }
 
 void setupHooks() {
