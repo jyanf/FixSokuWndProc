@@ -2,7 +2,6 @@
 #include <SokuLib.hpp>
 #include <Shlwapi.h>
 #pragma comment(lib, "Shlwapi.lib")
-#pragma comment(lib, "imm32.lib")
 #include <dinput.h>
 
 template<typename T>
@@ -80,10 +79,33 @@ static LRESULT CALLBACK PatchedWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPAR
 }
 */
 
+#include <msctf.h>
+//#pragma comment(lib, "ole32.lib")
+#pragma comment(lib, "imm32.lib")
+inline void setEngIME(HWND hwnd, const char* id) {
+	/*
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+	if (FAILED(hr) && hr != RPC_E_CHANGED_MODE) {
+		return;
+	}
 
-inline void setEngIME(HWND hwnd) {
-	MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US);
-	HKL hkl = LoadKeyboardLayoutW(L"00000409", KLF_ACTIVATE);
+	ITfInputProcessorProfiles* pProfiles = nullptr;
+	hr = CoCreateInstance(CLSID_TF_InputProcessorProfiles,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		IID_ITfInputProcessorProfiles,
+		(void**)&pProfiles);
+	if (FAILED(hr) || !pProfiles) {
+		CoUninitialize();
+		return;
+	}
+
+	// 切换当前线程语言
+	hr = pProfiles->ChangeCurrentLanguage(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
+	pProfiles->Release();
+	return CoUninitialize();
+	*/
+	HKL hkl = LoadKeyboardLayout(id, KLF_ACTIVATE | KLF_SETFORPROCESS);
 	if (hkl) {
 		ActivateKeyboardLayout(hkl, KLF_SETFORPROCESS);
 		puts("KeyboradLayout switched to EN-US. ");
