@@ -56,3 +56,4 @@ link.command.
 *.exp
 *.lib
 *.ilk
+/out
