@@ -207,10 +207,28 @@ LRESULT CALLBACK myWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 		puts("WIN UP blocked");
 		return 0;
 	}
-	if (uMsg == WM_SYSCOMMAND 
-	&& GET_SC_WPARAM(wParam) == SC_KEYMENU || GET_SC_WPARAM(wParam) == SC_TASKLIST
+	if (uMsg == WM_SYSCOMMAND) {
+		auto sc = GET_SC_WPARAM(wParam);
+		if (sc == SC_KEYMENU || sc == SC_TASKLIST) {
+			puts("WM_SYSCOMMAND blocked");
+			return 0;
+		}
+		else if (sc == SC_MINIMIZE 
+		&& (GetAsyncKeyState(VK_LWIN) || GetAsyncKeyState(VK_RWIN))
+		&& GetAsyncKeyState(VK_DOWN)
+		) {
+			puts("WIN hotkey blockcd");
+			return 0;
+		}
+	
+	}
+	if (uMsg == WM_WINDOWPOSCHANGING
+	&& (GetAsyncKeyState(VK_LWIN) || GetAsyncKeyState(VK_RWIN))
+	&& (GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState(VK_UP) || GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VK_RIGHT))
 	) {
-		puts("WM_SYSCOMMAND blocked");
+		auto& wd = *(WINDOWPOS*)lParam;
+		wd.flags = SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOCOPYBITS | SWP_NOREDRAW | SWP_NOSENDCHANGING;
+		puts("WIN hotkey blocked");
 		return 0;
 	}
 
